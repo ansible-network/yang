@@ -1,0 +1,46 @@
+---
+argument_spec:
+
+  yang_model_name:
+    description:
+      - Name of yang module (without extension) that should be translated tp yang tree format and generate
+        skeletion json and xml configuration
+    required: true
+    type: str
+
+  yang_spec_dir:
+    description:
+      - Provide a directory path where the generated yang tree and skeleton config
+        need to be stored.
+    type: path
+    default: ~/.ansible/yang/spec
+
+  yang_dir:
+    description:
+      - Provide a relative or absolute directory path in which the yang model mentioned in I(yang_model_name)
+        and it's dependent files are stored
+        mentioned as value of I(yang_file) required by the yang model mentioned as value of I(yang_file)
+    type: path
+
+  yang_search_path:
+    description:
+      - Provide a relative or absolute path which points to dependent yang models
+        required by the yang model mentioned as value of I(yang_file). The value
+        can be comma seperated path.
+    type: str
+
+  yang_doctype:
+    description:
+      - Identifies the root node of the configuration skeleton. If value is C(config) only configuration
+        data will be present in skeleton, if value is C(data) both config and state data fields will be present
+        in output.
+    required: false
+    default: config
+    choices: ['config', 'data']
+
+  yang_annotations:
+    description:
+      - The boolean flag identifies if the xml skeleton should have comments describing the field or not.
+    required: false
+    default: False
+    type: boolean

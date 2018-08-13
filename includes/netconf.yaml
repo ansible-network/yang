@@ -1,0 +1,3 @@
+---
+- name: enable netconf
+  include_tasks: configure_netconf.yaml

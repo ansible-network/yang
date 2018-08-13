@@ -1,0 +1,26 @@
+argument_spec:
+
+  ansible_network_os:
+    description:
+      - Set the name of the Ansible network OS platform.
+    required: true
+
+  ansible_connection:
+    description:
+      - Name of the connection type used to connect to remote host
+    required: true
+    default: netconf
+    choices: ['netconf']
+
+  yang_model_name:
+    description:
+      - Name of yang model name that needs to be fetch from remote host
+    required: true
+    type: str
+
+  yang_dir:
+    description:
+      - Provide a directory path where the fetched yang models from remote host
+        should be stored
+    type: str
+    default: ~/.ansible/yang/fetch

@@ -1,0 +1,18 @@
+---
+# defaults file for yang
+
+# boolean flag to indicate if yang model should be fetched from remote host or not
+yang_fetch_schema: true
+
+# yang_fetch variable
+yang_dir: "~/.ansible/yang/fetch"
+
+# yang tools (yang_json2xml and yang_spec) variables
+yang_file: "{{ yang_dir }}/{{ yang_model_name }}.yang"
+yang_search_path: "{{ yang_dir }}"
+
+# yang_spec variables
+yang_spec_dir: "~/.ansible/yang/spec"
+yang_json_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.json"
+yang_xml_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.xml"
+yang_tree_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.tree"

@@ -1,0 +1,17 @@
+---
+- name: validate role spec
+  validate_role_spec:
+    spec: configure_options.yaml
+
+- block:
+  - name: enable netconf
+    include_tasks: includes/netconf.yaml
+
+  - name: fetch yang model
+    include_tasks: includes/fetch.yaml
+  when: yang_fetch_schema|bool == true
+
+- name: "configure: validate input json config against fetched yang modules and push it on {{ inventory_hostname }}"
+  netconf_config:
+    xml: "{{ lookup('yang_json2xml', src, yang_file=yang_file, search_path=yang_search_path) }}"
+  register: result
