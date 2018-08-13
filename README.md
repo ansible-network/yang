@@ -1,7 +1,5 @@
 # yang
 
-[![yang Ansible Galaxy Role](https://img.shields.io/ansible/role/25206.svg)](https://galaxy.ansible.com/ansible-network/yang/)
-
 This role provides the foundation for building network roles by providing
 modules and plugins that are common to all Ansible Network roles. The role
 is platform-agnostic - all of the artifacts in this role can be used on any
