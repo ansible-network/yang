@@ -1,5 +1,4 @@
 ---
-- hosts: localhost
-  remote_user: root
-  roles:
-    - yang
+# main entrypoint
+
+- import_playbook: yang_json2xml/test.yml

@@ -49,6 +49,7 @@ The following are the list of variables this role accepts
 * yang_search_path:
 * yang_doctype:
 * yang_annotations:
+* yang_fetch_schema:
 
 
 ## Modules
@@ -63,16 +64,15 @@ The following is a list of plugins that are provided by this role.
 
 ### Lookup
 
-* `yang_json2xml` [[source]](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_json2xml.md).
-* `yang_spec` [[source]](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_spec.md).
+* `yang_json2xml` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_json2xml.md).
+* `yang_spec` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_spec.md).
 
 ### Filter
 
 ## Dependencies
 
 The following is the list of dependencies on other roles this role requires.
-
-None
+* Platform specific provider role task to enable Netconf on remote host
 
 ## License
 
