@@ -1,38 +1,85 @@
-Role Name
-=========
+# yang
 
-A brief description of the role goes here.
+[![yang Ansible Galaxy Role](https://img.shields.io/ansible/role/25206.svg)](https://galaxy.ansible.com/ansible-network/yang/)
 
-Requirements
-------------
+This role provides the foundation for building network roles by providing
+modules and plugins that are common to all Ansible Network roles. The role
+is platform-agnostic - all of the artifacts in this role can be used on any
+Ansible-managed network platform.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+To install this role: `ansible-galaxy install ansible-network.yang`
 
-Role Variables
---------------
+To see the version of this role you currently have installed: `ansible-galaxy list | grep yang`
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+To ensure you have the latest version available: `ansible-galaxy install -f ansible-network.yang`
 
-Dependencies
-------------
+To use this role, follow the [User Guide](https://github.com/ansible-network/yang/blob/devel/docs/user_guide/README.md).
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/). 
 
-Example Playbook
-----------------
+Any open bugs and/or feature requests are tracked in [GitHub issues](https://github.com/ansible-network/yang/issues).
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Interested in contributing to this role? Check out [CONTRIBUTING](https://github.com/ansible-network/yang/blob/devel/CONTRIBUTING.md) before submitting a pull request.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Documentation
 
-License
--------
+* User guide:
+    - [How to use](https://github.com/ansible-network/yang/blob/devel/docs/user_guide/README.md)
+* Development guide: [How to test](https://github.com/ansible-network/yang/blob/devel/docs/tests/test_guide.md)
 
-BSD
+For module documentation see the [modules](#modules) section below.
 
-Author Information
-------------------
+## Requirements
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+* Ansible 2.6.0 (or higher)
+
+## Tasks
+
+The following are the available tasks provided by this role for use in
+playbooks.
+
+* `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
+* `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
+* `fetch` [source](https://github.com/ansible-network/yang/blob/devel/includes/fetch.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/includes/fetch.md).
+## Variables
+
+The following are the list of variables this role accepts
+
+* yang_config_file:
+* yang_model_name:
+* yang_dir:
+* yang_search_path:
+* yang_doctype:
+* yang_annotations:
+
+
+## Modules
+
+The following is a list of modules that are provided by this role, which include documentation & examples:
+
+* `yang_fetch` [source](https://github.com/ansible-network/yang/blob/devel/action_plugins/yang_fetch.py) [docs](https://github.com/ansible-network/yang/blob/devel/library/yang_fetch.py).
+
+## Plugins
+
+The following is a list of plugins that are provided by this role.
+
+### Lookup
+
+* `yang_json2xml` [[source]](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_json2xml.md).
+* `yang_spec` [[source]](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_spec.md).
+
+### Filter
+
+## Dependencies
+
+The following is the list of dependencies on other roles this role requires.
+
+None
+
+## License
+
+GPLv3
+
+## Author Information
+
+Ansible Network Engineering Team

@@ -39,5 +39,3 @@ galaxy_info:
     - junos
 
 dependencies:
-  - ansible-network.network-engine
-  - ansible-network.cisco_iosxr
