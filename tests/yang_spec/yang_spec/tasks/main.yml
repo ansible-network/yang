@@ -1,0 +1,7 @@
+---
+- name: import dependency role for test
+  import_role:
+    name: "{{ role_path.split('/tests/yang_spec/yang_spec')[0] }}"
+
+- name: yang_spec test
+  import_tasks: basic.yml

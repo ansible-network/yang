@@ -1,0 +1,76 @@
+---
+- name: Convert interface yang module to spec with default values
+  set_fact:
+    interface_spec: "{{ lookup('yang_spec', yang_file, search_path=search_path, defaults=True) }}"
+
+- assert:
+    that:
+      - "'json_skeleton' in interface_spec"
+      - "'xml_skeleton' in interface_spec"
+      - "'tree' in interface_spec"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['config'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['config']['description'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['name'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['index'] == '0'"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['enabled'] == 'True'"
+      - "'<interface>' in interface_spec['xml_skeleton']"
+      - "'<loopback-mode>False</loopback-mode>' in interface_spec['xml_skeleton']"
+      - "'module: openconfig-interfaces' in interface_spec['tree']"
+      - "'+--rw interface* [name]' in interface_spec['tree']"
+
+- name: Convert interface yang module to spec with no default and annotation in xml
+  set_fact:
+    interface_spec: "{{ lookup('yang_spec', yang_file, search_path=search_path, defaults=False, annotations=True) }}"
+
+- assert:
+    that:
+      - "'json_skeleton' in interface_spec"
+      - "'xml_skeleton' in interface_spec"
+      - "'tree' in interface_spec"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['config'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['config']['description'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['name'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['index'] == ''"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['enabled'] == ''"
+      - "'<interface>' in interface_spec['xml_skeleton']"
+      - "'<loopback-mode>False</loopback-mode>' not in interface_spec['xml_skeleton']"
+      - "'<!-- # keys: name-->' in interface_spec['xml_skeleton']"
+
+- name: Convert interface yang module to spec with state data
+  set_fact:
+    interface_spec: "{{ lookup('yang_spec', yang_file, search_path=search_path, doctype='data') }}"
+
+- assert:
+    that:
+      - "'json_skeleton' in interface_spec"
+      - "'xml_skeleton' in interface_spec"
+      - "'tree' in interface_spec"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['config'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['state'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['state']['admin-status'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['name'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['state']['admin-status'] is defined"
+      - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['state']['counters'] is defined"
+      - "'<out-broadcast-pkts/>' in interface_spec['xml_skeleton']"
+      - "'<oper-status/>' in interface_spec['xml_skeleton']"
+      - "'<state>' in interface_spec['xml_skeleton']"
+
+- name: Wrong yang module path
+  set_fact:
+    interface_spec: "{{ lookup('yang_spec', '/test', search_path=search_path) }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "'invalid file path' in result.msg"
+
+- name: Wrong module search path
+  set_fact:
+    interface_spec: "{{ lookup('yang_spec', yang_file, search_path='/test') }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "'invalid directory path' in result.msg"
