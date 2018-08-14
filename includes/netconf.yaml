@@ -1,3 +1,5 @@
 ---
 - name: enable netconf
-  include_tasks: configure_netconf.yaml
+  include_role:
+    name: "{{ ansible_network_provider }}"
+    tasks_from: configure_netconf
