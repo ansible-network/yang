@@ -4,4 +4,4 @@
     name: "{{ role_path.split('/tests/yang_json2xml/yang_json2xml')[0] }}"
 
 - name: yang_json2xml test
-  import_tasks: basic.yaml
+  import_tasks: basic.yml

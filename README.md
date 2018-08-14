@@ -36,9 +36,9 @@ For module documentation see the [modules](#modules) section below.
 The following are the available tasks provided by this role for use in
 playbooks.
 
-* `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
-* `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
-* `fetch` [source](https://github.com/ansible-network/yang/blob/devel/includes/fetch.yaml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/includes/fetch.md).
+* `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
+* `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
+* `fetch` [source](https://github.com/ansible-network/yang/blob/devel/includes/fetch.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/includes/fetch.md).
 ## Variables
 
 The following are the list of variables this role accepts
