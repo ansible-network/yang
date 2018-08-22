@@ -1,14 +1,14 @@
 ---
 - name: validate role spec
   validate_role_spec:
-    spec: configure_options.yaml
+    spec: configure_options.yml
 
 - block:
   - name: enable netconf
-    include_tasks: includes/netconf.yaml
+    include_tasks: includes/netconf.yml
 
   - name: fetch yang model
-    include_tasks: includes/fetch.yaml
+    include_tasks: fetch.yml
   when: yang_fetch_schema|bool == true
 
 - name: "configure: validate input json config against fetched yang modules and push it on {{ inventory_hostname }}"

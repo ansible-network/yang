@@ -1,0 +1,3 @@
+- hosts: appliance
+  roles:
+    - yang_fetch

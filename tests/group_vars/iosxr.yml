@@ -1,0 +1,5 @@
+ansible_connection: netconf
+ansible_network_os: iosxr
+ansible_user: "changeme"
+ansible_ssh_pass: "changeme"
+ansible_ssh_port: 22

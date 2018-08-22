@@ -8,7 +8,6 @@ argument_spec:
   ansible_connection:
     description:
       - Name of the connection type used to connect to remote host
-    required: true
     default: netconf
     choices: ['netconf']
 

@@ -1,14 +1,14 @@
 ---
 - name: validate role spec
   validate_role_spec:
-    spec: configure_options.yaml
+    spec: configure_options.yml
 
 - block:
   - name: enable netconf
-    include_tasks: includes/netconf.yaml
+    include_tasks: includes/netconf.yml
 
   - name: fetch yang model
-    include_tasks: includes/fetch.yaml
+    include_tasks: fetch.yml
   when: yang_fetch_schema|bool == true
 
 - name: "spec: create directory '{{ yang_spec_dir }}' if not exist"
@@ -18,7 +18,7 @@
 
 - name: "spec: generate yang tree and config skeleton in json and xml format"
   set_fact:
-    yang_spec_out: "{{ lookup('yang2spec', yang_file, search_path=yang_search_path, doctype=yang_doctype, annotations=yang_annotations) }}"
+    yang_spec_out: "{{ lookup('yang_spec', yang_file, search_path=yang_search_path, doctype=yang_doctype, annotations=yang_annotations) }}"
 
 - name: "spec: copy json config structure to file {{ yang_json_config_file }}"
   copy:

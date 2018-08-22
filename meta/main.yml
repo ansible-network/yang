@@ -38,4 +38,4 @@ galaxy_info:
     - iosxr
     - junos
 
-dependencies:
+dependencies: []

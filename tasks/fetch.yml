@@ -1,7 +1,7 @@
 ---
 - name: validate role spec
   validate_role_spec:
-    spec: fetch_options.yaml
+    spec: fetch_options.yml
 
 - name: "fetch: create directory '{{ yang_dir }}' if not exist"
   file:
@@ -9,6 +9,12 @@
     state: directory
 
 - name: "fetch: retrieve '{{ yang_model_name }}' and dependent yang modules from host and store in directory '{{ yang_dir }}' "
-  fetch_schema:
+  yang_fetch:
     schema: "{{ yang_model_name }}"
-    dest: "{{ yang_dir }}"
+  register: result
+
+- name: "fetch: copy yang models in destination file"
+  copy:
+    content: "{{ item.value }}"
+    dest: "{{ yang_dir }}/{{ item.key }}.yang"
+  loop: "{{ lookup('dict', result.fetched) }}"
