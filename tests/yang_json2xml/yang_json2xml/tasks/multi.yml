@@ -1,0 +1,52 @@
+---
+- name: Convert interface json config to xml
+  set_fact:
+    multi_ietf_xml: "{{ lookup('yang_json2xml', multi_valid_config, yang_file=multi_yang_file, search_path=search_path) }}"
+
+- assert:
+    that:
+      - "'<nacm:nacm>' in multi_ietf_xml"
+      - "'<nacm:groups>' in multi_ietf_xml"
+      - "'<nacm:group>' in multi_ietf_xml"
+      - "'<nacm:name>system-support</nacm:name>' in multi_ietf_xml"
+      - "'<nacm:user-name>support-user</nacm:user-name>' in multi_ietf_xml"
+      - "'</nacm:group>' in multi_ietf_xml"
+      - "'<nacm:group>' in multi_ietf_xml"
+      - "'<nacm:name>system-admin</nacm:name>' in multi_ietf_xml"
+      - "'<nacm:user-name>admin-user</nacm:user-name>' in multi_ietf_xml"
+      - "'</nacm:group>' in multi_ietf_xml"
+      - "'</nacm:groups>' in multi_ietf_xml"
+      - "'</nacm:nacm>' in multi_ietf_xml"
+      - "'<if:interfaces>' in multi_ietf_xml"
+      - "'<if:interface>' in multi_ietf_xml"
+      - "'<if:name>mgmt@local</if:name>' in multi_ietf_xml"
+      - "'<if:type>ianaift:ipForward</if:type>' in multi_ietf_xml"
+      - "'</if:interface>' in multi_ietf_xml"
+      - "'<if:interface>' in multi_ietf_xml"
+      - "'<if:name>management</if:name>' in multi_ietf_xml"
+      - "'<if:type>ianaift:ethernetCsmacd</if:type>' in multi_ietf_xml"
+      - "'</if:interface>' in multi_ietf_xml"
+      - "'</if:interfaces>' in multi_ietf_xml"
+
+- name: Convert interface json config to xml with data as root node
+  set_fact:
+    multi_ietf_xml: "{{ lookup('yang_json2xml', multi_valid_config, root='data', yang_file=multi_yang_file, search_path=search_path) }}"
+
+- assert:
+    that:
+      - "'<nc:config ' not in multi_ietf_xml"
+      - "'<nc:data ' in multi_ietf_xml"
+
+- name: invalid input json configuration
+  set_fact:
+    multi_ietf_xml: "{{ lookup('yang_json2xml', multi_invalid_config, yang_file=multi_yang_file, search_path=search_path) }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "result.failed == True"
+      # Uncomment below condition after issue in pyang is fixed
+      # Issue: https://github.com/mbj4668/pyang/issues/402 #
+      # Fix: https://github.com/mbj4668/pyang/pull/403 #
+      - "'missing key \\'ietf-interfaces:name\\'' in result.msg"
