@@ -108,8 +108,8 @@ class LookupModule(LookupBase):
             if not yang_files:
                 # Glob returned no files
                 raise AnsibleError('%s invalid file path' % yang_file)
-        else: 
-            yang_files = [ yang_file ]
+        else:
+            yang_files = [yang_file]
 
         search_path = kwargs.pop('search_path', '')
 
