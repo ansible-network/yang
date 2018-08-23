@@ -49,4 +49,4 @@
       # Uncomment below condition after issue in pyang is fixed
       # Issue: https://github.com/mbj4668/pyang/issues/402 #
       # Fix: https://github.com/mbj4668/pyang/pull/403 #
-      - "'missing key \\'ietf-interfaces:name\\'' in result.msg"
+      # - "'missing key \\'ietf-interfaces:name\\'' in result.msg"
