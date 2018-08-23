@@ -1,3 +1,4 @@
 - hosts: appliance
+  connection: netconf
   roles:
     - yang_fetch
