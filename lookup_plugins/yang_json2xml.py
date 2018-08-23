@@ -103,10 +103,10 @@ class LookupModule(LookupBase):
             raise AnsibleError("value of 'yang_file' must be specified")
 
         if not os.path.isfile(yang_file):
-            try:
-                # Maybe we are passing a glob?
-                yang_files = glob.glob(yang_file)
-            except:
+            # Maybe we are passing a glob?
+            yang_files = glob.glob(yang_file)
+            if not yang_files:
+                # Glob returned no files
                 raise AnsibleError('%s invalid file path' % yang_file)
         else: 
             yang_files = [ yang_file ]
