@@ -57,7 +57,7 @@ import sys
 import json
 import shutil
 import uuid
-
+import glob
 
 from copy import deepcopy
 
@@ -103,7 +103,13 @@ class LookupModule(LookupBase):
             raise AnsibleError("value of 'yang_file' must be specified")
 
         if not os.path.isfile(yang_file):
-            raise AnsibleError('%s invalid file path' % yang_file)
+            try:
+                # Maybe we are passing a glob?
+                yang_files = glob.glob(yang_file)
+            except:
+                raise AnsibleError('%s invalid file path' % yang_file)
+        else: 
+            yang_files = [ yang_file ]
 
         search_path = kwargs.pop('search_path', '')
 
@@ -139,7 +145,7 @@ class LookupModule(LookupBase):
         xml_file_path = os.path.realpath(os.path.expanduser(xml_file_path))
 
         # fill in the sys args before invoking pyang
-        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, yang_file, '-p', search_path, "--lax-quote-checks"]
+        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, '-p', search_path, "--lax-quote-checks"] + yang_files
 
         try:
             pyang_exec.run()
