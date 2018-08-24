@@ -5,3 +5,6 @@
 
 - name: yang_json2xml test
   import_tasks: basic.yml
+
+- name: multi_model test
+  import_tasks: multi.yml
