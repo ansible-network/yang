@@ -41,7 +41,7 @@ on yang/netconf supported devices.
 
 * `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
 * `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
-* `fetch` [source](https://github.com/ansible-network/yang/blob/devel/includes/fetch.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/includes/fetch.md).
+* `fetch` [source](https://github.com/ansible-network/yang/blob/devel/tasks/fetch.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/fetch.md).
 
 ## Variables
 
@@ -56,7 +56,7 @@ The following are the list of variables for each of the role functions.
 
 The following is a list of modules that are provided by this role, which include documentation & examples:
 
-* `yang_fetch` [source](https://github.com/ansible-network/yang/blob/devel/action_plugins/yang_fetch.py).
+* `yang_fetch` [source](https://github.com/ansible-network/yang/blob/devel/action_plugins/yang_fetch.py) [docs](https://github.com/ansible-network/yang/blob/devel/library/yang_fetch.py).
 
 ## Plugins
 
