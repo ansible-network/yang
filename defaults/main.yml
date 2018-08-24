@@ -4,6 +4,9 @@
 # boolean flag to indicate if yang model should be fetched from remote host or not
 yang_fetch_schema: true
 
+# boolean flag to control netconf enable task run
+yang_netconf_enable_task_run: true
+
 # yang_fetch variable
 yang_dir: "~/.ansible/yang/fetch"
 
@@ -16,3 +19,9 @@ yang_spec_dir: "~/.ansible/yang/spec"
 yang_json_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.json"
 yang_xml_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.xml"
 yang_tree_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.tree"
+yang_doctype: "config"
+yang_annotations: false
+yang_deafults: false
+
+# comman variables
+yang_keep_tmp_files: false

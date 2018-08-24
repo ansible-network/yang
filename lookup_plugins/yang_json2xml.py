@@ -37,6 +37,15 @@ options:
         in the yang file mentioned in C(path) option. If the value is not given it will search in
         the current directory.
     required: false
+  keep_tmp_files:
+    description:
+      - This is a boolean flag to indicate if the intermediate files generated while validation json
+       configuration should be kept or deleted. If the value is C(true) the files will not be deleted else by
+        default all the intermediate files will be deleted irrespective of whether task run is
+        successful or not. The intermediate files are stored in path C(~/.ansible/tmp/json2xml), this
+        option is mainly used for debugging purpose.
+    default: False
+    type: bool
 """
 
 EXAMPLES = """
@@ -102,6 +111,7 @@ class LookupModule(LookupBase):
         except KeyError:
             raise AnsibleError("value of 'yang_file' must be specified")
 
+        yang_file = os.path.realpath(os.path.expanduser(yang_file))
         if not os.path.isfile(yang_file):
             # Maybe we are passing a glob?
             yang_files = glob.glob(yang_file)
@@ -112,10 +122,20 @@ class LookupModule(LookupBase):
             yang_files = [yang_file]
 
         search_path = kwargs.pop('search_path', '')
+        keep_tmp_files = kwargs.pop('keep_tmp_files', False)
 
+        abs_search_path = None
         for path in search_path.split(':'):
+            path = os.path.realpath(os.path.expanduser(path))
+            if abs_search_path is None:
+                abs_search_path = path
+            else:
+                abs_search_path += ':' + path
             if path is not '' and not os.path.isdir(path):
                 raise AnsibleError('%s is invalid directory path' % path)
+
+        search_path = abs_search_path
+        json_config = os.path.realpath(os.path.expanduser(json_config))
         try:
             # validate json
             with open(json_config) as fp:
@@ -157,7 +177,8 @@ class LookupModule(LookupBase):
         finally:
             err = sys.stderr.getvalue()
             if err and 'error' in err.lower():
-                shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+                if not keep_tmp_files:
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
                 raise AnsibleError('Error while generating intermediate (jtox) file: %s' % err)
 
         json2xml_exec_path = find_file_in_path('json2xml')
@@ -176,7 +197,8 @@ class LookupModule(LookupBase):
         finally:
             err = sys.stderr.getvalue()
             if err and 'error' in err.lower():
-                shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+                if not keep_tmp_files:
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
                 raise AnsibleError('Error while translating to xml: %s' % err)
             sys.argv = saved_arg
             sys.stdout = saved_stdout
@@ -188,7 +210,8 @@ class LookupModule(LookupBase):
         except Exception as e:
             raise AnsibleError('Error while reading xml document: %s' % e)
         finally:
-            shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+            if not keep_tmp_files:
+                shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
         res.append(etree.tostring(root))
 
         return res

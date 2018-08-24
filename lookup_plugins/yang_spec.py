@@ -43,19 +43,28 @@ DOCUMENTATION = """
         description:
           - The boolean flag identifies if the xml skeleton should have comments describing the field or not.
         default: False
-        type: boolean
+        type: bool
+      keep_tmp_files:
+        description:
+          - This is a boolean flag to indicate if the intermediate files generated while creating spec
+            should be kept or deleted. If the value is C(true) the files will not be deleted else by
+            default all the intermediate files will be deleted irrespective of whether task run is
+            successful or not. The intermediate files are stored in path C(~/.ansible/tmp/yang_spec), this
+            option is mainly used for debugging purpose.
+        default: False
+        type: bool
 """
 
 EXAMPLES = """
 - name: Get interface yang config spec without defaults
   set_fact:
     interfaces_spec: "{{ lookup('yang_spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
-                            search_path='openconfig/public/release/models:pyang/modules/', default=True, doctype='data') }}"
+                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True, doctype='data') }}"
 
 - name: Get interface yang spec with defaults and state data
   set_fact:
     interfaces_spec: "{{ lookup('yang_spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
-                            search_path='openconfig/public/release/models:pyang/modules/', default=True, doctype='data') }}"
+                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True, doctype='data') }}"
 """
 
 RETURN = """
@@ -213,6 +222,7 @@ class LookupModule(LookupBase):
         except IndexError:
             raise AnsibleError('the yang file must be specified')
 
+        yang_file = os.path.realpath(os.path.expanduser(yang_file))
         if not os.path.isfile(yang_file):
             raise AnsibleError('%s invalid file path' % yang_file)
 
@@ -220,15 +230,17 @@ class LookupModule(LookupBase):
         annotations = kwargs.pop('annotations', '')
 
         for path in search_path.split(':'):
+            path = os.path.realpath(os.path.expanduser(path))
             if path is not '' and not os.path.isdir(path):
                 raise AnsibleError('%s is invalid directory path' % path)
 
-        default = kwargs.pop('defaults', False)
+        keep_tmp_files = kwargs.pop('keep_tmp_files', False)
+        defaults = kwargs.pop('defaults', False)
         doctype = kwargs.pop('doctype', 'config')
 
         valid_doctype = ['config', 'data']
         if doctype not in valid_doctype:
-            raise AnsibleError('docttpe value %s is invalid, valid value are %s' % (path, ', '.join(valid_doctype)))
+            raise AnsibleError('doctpe value %s is invalid, valid value are %s' % (path, ', '.join(valid_doctype)))
 
         pyang_exec_path = find_file_in_path('pyang')
 
@@ -249,7 +261,7 @@ class LookupModule(LookupBase):
         sample_xml_skeleton_cmd = [pyang_exec_path, '-f', 'sample-xml-skeleton', '-o', xml_file_path, yang_file, '-p', search_path,
                                    "--sample-xml-skeleton-doctype", doctype, "--lax-quote-checks"]
 
-        if default:
+        if defaults:
             sample_xml_skeleton_cmd.append("--sample-xml-skeleton-defaults")
 
         if annotations:
@@ -260,12 +272,14 @@ class LookupModule(LookupBase):
         except SystemExit:
             pass
         except Exception as e:
-            shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+            if not keep_tmp_files:
+                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
             raise AnsibleError('Error while generating skeleton xml file: %s' % e)
         finally:
             err = sys.stdout.getvalue()
             if err and 'error' in err.lower():
-                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+                if not keep_tmp_files:
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
                 raise AnsibleError('Error while generating skeleton xml file: %s' % err)
 
         sys.stdout.flush()
@@ -279,12 +293,14 @@ class LookupModule(LookupBase):
         except SystemExit:
             pass
         except Exception as e:
-            shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+            if not keep_tmp_files:
+                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
             raise AnsibleError('Error while generating tree file: %s' % e)
         finally:
             err = sys.stdout.getvalue()
             if err and 'error' in err.lower():
-                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+                if not keep_tmp_files:
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
                 raise AnsibleError('Error while generating tree file: %s' % err)
 
         sys.stdout.flush()
@@ -297,7 +313,7 @@ class LookupModule(LookupBase):
         sample_json_skeleton_cmd = [pyang_exec_path, '--plugindir', plugindir, '-f', 'sample-json-skeleton', '-o', json_file_path,
                                     yang_file, '-p', search_path, '--lax-quote-checks', '--sample-json-skeleton-doctype', doctype]
 
-        if default:
+        if defaults:
             sample_json_skeleton_cmd.append("--sample-json-skeleton-defaults")
 
         try:
@@ -305,12 +321,14 @@ class LookupModule(LookupBase):
         except SystemExit:
             pass
         except Exception as e:
-            shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+            if not keep_tmp_files:
+                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
             raise AnsibleError('Error while generating skeleton json file: %s' % e)
         finally:
             err = sys.stdout.getvalue()
             if err and 'error' in err.lower():
-                shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
+                if not keep_tmp_files:
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(YANG_SPEC_DIR_PATH)), ignore_errors=True)
                 raise AnsibleError('Error while generating tree json: %s' % err)
 
         with open(tree_file_path, 'r') as f:
@@ -322,7 +340,8 @@ class LookupModule(LookupBase):
         with open(json_file_path, 'r') as f:
             output['json_skeleton'] = json.load(f)
 
-        shutil.rmtree(plugindir, ignore_errors=True)
+        if not keep_tmp_files:
+            shutil.rmtree(plugindir, ignore_errors=True)
         res.append(output)
         return res
 

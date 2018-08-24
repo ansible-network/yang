@@ -3,6 +3,10 @@
   validate_role_spec:
     spec: fetch_options.yml
 
+- name: enable netconf
+  include_tasks: includes/netconf.yml
+  when: yang_netconf_enable_task_run|bool == true
+
 - name: "fetch: create directory '{{ yang_dir }}' if not exist"
   file:
     path: "{{ yang_dir }}"

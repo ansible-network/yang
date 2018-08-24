@@ -34,13 +34,29 @@ argument_spec:
       - Identifies the root node of the configuration skeleton. If value is C(config) only configuration
         data will be present in skeleton, if value is C(data) both config and state data fields will be present
         in output.
-    required: false
-    default: config
+    default: 'config'
     choices: ['config', 'data']
 
   yang_annotations:
     description:
       - The boolean flag identifies if the xml skeleton should have comments describing the field or not.
-    required: false
     default: False
-    type: boolean
+    type: bool
+
+  defaults:
+    description:
+      - The boolean flag identifies if the default value of the fields should be added in xml and json configuration
+        schema or not.
+    default: False
+    type: bool
+
+  yang_keep_tmp_files:
+    description:
+      - This is a boolean flag to indicate if the intermediate files generated
+        while creating spec should be kept or deleted. If the value
+        is C(true) the files will not be deleted else by default all the intermediate
+        files will be deleted irrespective of whether task run is successful or not.
+        The intermediate files are stored in path C(~/.ansible/tmp/yang_spec), this
+        option is mainly used for debugging purpose.
+    type: bool
+    default: False

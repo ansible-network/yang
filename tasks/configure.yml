@@ -4,14 +4,16 @@
     spec: configure_options.yml
 
 - block:
-  - name: enable netconf
-    include_tasks: includes/netconf.yml
-
   - name: fetch yang model
     include_tasks: fetch.yml
   when: yang_fetch_schema|bool == true
 
+- block:
+  - name: enable netconf
+    include_tasks: includes/netconf.yml
+  when: yang_fetch_schema|bool == false and yang_netconf_enable_task_run|bool == true
+
 - name: "configure: validate input json config against fetched yang modules and push it on {{ inventory_hostname }}"
   netconf_config:
-    xml: "{{ lookup('yang_json2xml', src, yang_file=yang_file, search_path=yang_search_path) }}"
+    xml: "{{ lookup('yang_json2xml', yang_config_file, yang_file=yang_file, search_path=yang_search_path, keep_tmp_files=yang_keep_tmp_files) }}"
   register: result

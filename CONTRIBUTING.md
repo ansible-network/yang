@@ -10,67 +10,53 @@ role.
 There are many ways you can contribute to this role.  Adding new artifacts such
 as modules and plugins, testing and/or reviewing and updating documentation.
 
-### Adding support for a new platform
+### Adding support for new plugins/modules
 
-To add support for a new platform to this role, there are a couple of things
+To add support for a new plugins/modules to this role, there are a couple of things
 that need to be done.
 
-1) Create the module for the platform specific implementation in Ansible.  The
-module can be contributed directly to Ansible core, distributed through Ansible
-Galaxy or added to this role.
+1) If you are adding new action plugin add it to `action_plugins`.
+If the action pluign works like a module add the new action
+plugin say `foo.py` in `action_plugins/foo.py` and the corresponding module
+documentation in `library/foo.py`
 
-2) (Optional) If adding the module code directly to this role, add the module
-to `library/`
+2) If adding the module code directly to this role, add the module to `library/`
 
-3) (Optional) If the new platform module is distributed through another Galaxy
-role, please update [README](README.md) Dependencies section to include the
-name of the Galaxy role that includes the module.
+3) If adding a lookup plugin add it to `lookup_plugins/`
 
-4) Once the module has been created, the add a new task in `tasks/` for the
-specific platform to be supported.  Use any of the existing platform
-implementations as a guide.
+4) This role currently uses netconf transport to configure the network device (we plan extend support with other transports in future).
+In order to ensure netconf is enabled on remote host this role depends on the platform specific roles [refer](https://github.com/ansible-network/yang/blob/devel/includes/netconf.yml)
+where the value of `ansible_network_provider` is the name of the platform role for example [cisco_iosxr](https://github.com/ansible-network/cisco_iosxr).
+If you are adding support of new platform ensure the role has a task in the `tasks` folder with name `configure_netconf.yml` that
+configures netconf on remote device and update [README](README.md) Dependencies section to include the name of the role.
 
-5) (Optional) If a configuration parameter is not supported, then the
-implementation in tasks should detect that and provide a warning message.
+4) If you are adding a new task to this role please update the [README](README.md) Functions and Variables section
+and if required add the task option spec [here](https://github.com/ansible-network/yang/tree/devel/meta)
 
-6) Update the `meta/main.yaml` file to add the newly provided platform to
-the `platforms` meta data.
+5) For any new feature pull request or bugifx pull request please update module docs and new/update existing [docs](https://github.com/ansible-network/yang/tree/devel/docs) if required.
+Also it is preferred to add test case with pull request.
 
-### Adding platform specific arguments
 
-Sometimes there is a need to add platform specific arguments to a role for use
-by a platform specific module.  This can be accomplished by adding the adding
-the arguments under a platform specific key.
+### Adding platform specific task support
 
+For new platform support add a role that can be distributed through galaxy
+which enables the required transport for this role.
 Note: It is the responsibility of the task writer to handle the implementation
 of the platform specific arguments.
 
-Here is an example that implements a platform specific argument:
+Here is an example that implements a platform specific task:
 
 ```yaml
 tasks:
   - name: configure network device resource
     include_role:
       name: cisco_iosxr
-    vars:
-      resource:
-        foo: bar
-      ios:
-        foo: baz
+    tasks_from: configure_netconf
 ```
 
-### Adding documentation for a platform specific implementation
+### Adding test cases
 
-While not required, there are times when providing implementation nodes are
-advantageous to instructing the playbook writer how to implement platform
-specific arguments.  In order to provide platform specific documentation,
-create a file in the docs directory using GitHub Markdown.  The file name
-should be the platform name.
-
-For instance, let's assume we want to create implementation nodes for a
-fictitious platform call `foo`.  Create a new file `docs/foo.md` and
-then add a link to [README](README.md) pointing to `docs/foo.md` in the `PLATFORM
-NOTES` section.
+Refer [test guide](https://github.com/ansible-network/yang/blob/devel/docs/tests/test_guide.md)
 
 # Note
 

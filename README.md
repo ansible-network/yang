@@ -1,9 +1,7 @@
 # yang
 
 This role provides the foundation for building network roles by providing
-modules and plugins that are common to all Ansible Network roles. The role
-is platform-agnostic - all of the artifacts in this role can be used on any
-Ansible-managed network platform.
+modules and plugins related to yang support.
 
 To install this role: `ansible-galaxy install ansible-network.yang`
 
@@ -21,42 +19,44 @@ Interested in contributing to this role? Check out [CONTRIBUTING](https://github
 
 ## Documentation
 
-* User guide:
-    - [How to use](https://github.com/ansible-network/yang/blob/devel/docs/user_guide/README.md)
-* Development guide: [How to test](https://github.com/ansible-network/yang/blob/devel/docs/tests/test_guide.md)
+* User guide: [How to use](https://github.com/ansible-network/yang/blob/devel/docs/user_guide/README.md)
+* Test guide: [How to test](https://github.com/ansible-network/yang/blob/devel/docs/tests/test_guide.md)
 
 For module documentation see the [modules](#modules) section below.
 
 ## Requirements
 
-* Ansible 2.6.0 (or higher)
+* Ansible 2.6.0 or later
+* Ansible Network Engine Role 2.6.2 or later
 
-## Tasks
+## List of network os the role is actively tested against
+* iosxr (version 6.1.2)
+* junos (version 17.4)
 
-The following are the available tasks provided by this role for use in
-playbooks.
+## Functions
+
+This section provides a list of the available functions that are including in this role.
+Any of the provided functions can be implemented in Ansible playbooks to perform automation activities
+on yang/netconf supported devices.
 
 * `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
 * `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
 * `fetch` [source](https://github.com/ansible-network/yang/blob/devel/includes/fetch.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/includes/fetch.md).
+
 ## Variables
 
-The following are the list of variables this role accepts
+The following are the list of variables for each of the role functions.
 
-* yang_config_file:
-* yang_model_name:
-* yang_dir:
-* yang_search_path:
-* yang_doctype:
-* yang_annotations:
-* yang_fetch_schema:
+* `configure`: [options](https://github.com/ansible-network/yang/blob/devel/meta/configure_options.yml)
+* `spec`: [options](https://github.com/ansible-network/yang/blob/devel/meta/spec_options.yml)
+* `fetch`: [options](https://github.com/ansible-network/yang/blob/devel/meta/fetch_options.yml)
 
 
 ## Modules
 
 The following is a list of modules that are provided by this role, which include documentation & examples:
 
-* `yang_fetch` [source](https://github.com/ansible-network/yang/blob/devel/action_plugins/yang_fetch.py) [docs](https://github.com/ansible-network/yang/blob/devel/library/yang_fetch.py).
+* `yang_fetch` [source](https://github.com/ansible-network/yang/blob/devel/action_plugins/yang_fetch.py).
 
 ## Plugins
 
@@ -64,8 +64,8 @@ The following is a list of plugins that are provided by this role.
 
 ### Lookup
 
-* `yang_json2xml` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_json2xml.md).
-* `yang_spec` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py) [docs](https://github.com/ansible-network/yang/blob/devel/docs/lookup_plugins/yang_spec.md).
+* `yang_json2xml` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py).
+* `yang_spec` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py).
 
 ### Filter
 

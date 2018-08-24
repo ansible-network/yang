@@ -9,7 +9,6 @@ argument_spec:
   ansible_connection:
     description:
       - Name of the connection type used to connect to remote host
-    required: true
     default: netconf
     choices: ['netconf']
 
@@ -25,3 +24,21 @@ argument_spec:
       - Name of yang module for which json configuration is defined
     required: true
     type: str
+
+  yang_dir:
+    description:
+      - Provide a directory path where the fetched yang models from remote host
+        should be stored
+    type: str
+    default: ~/.ansible/yang/fetch
+
+  yang_keep_tmp_files:
+    description:
+      - This is a boolean flag to indicate if the intermediate files generated
+        while validation json configuration should be kept or deleted. If the value
+        is C(true) the files will not be deleted else by default all the intermediate
+        files will be deleted irrespective of whether task run is successful or not.
+        The intermediate files are stored in path C(~/.ansible/tmp/json2xml), this
+        option is mainly used for debugging purpose.
+    type: bool
+    default: False
