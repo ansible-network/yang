@@ -1,4 +1,7 @@
 ---
+- name: initialize function
+  include_tasks: includes/init.yaml
+
 - name: validate role spec
   validate_role_spec:
     spec: fetch_options.yml
