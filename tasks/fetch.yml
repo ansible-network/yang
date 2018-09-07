@@ -17,8 +17,13 @@
     schema: "{{ yang_model_name }}"
   register: result
 
+- name: "spec: create directory '{{ yang_dir }}' if not exist"
+  file:
+    path: "{{ yang_dir }}"
+    state: directory
+
 - name: "fetch: copy yang models in destination file"
   copy:
     content: "{{ item.value }}"
     dest: "{{ yang_dir }}/{{ item.key }}.yang"
-  loop: "{{ lookup('dict', result.fetched) }}"
+  loop: "{{ lookup('dict', result.fetched, wantlist=True) }}"

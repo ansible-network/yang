@@ -399,7 +399,7 @@ class SampleJSONSkeletonPlugin(plugin.PyangPlugin):
         """
         for (epos, etag, eargs) in ctx.errors:
             if error.is_error(error.err_level(etag)):
-                raise error.EmitError("JTOX plugin needs a valid module")
+                raise error.EmitError("sample-json-skeleton plugin needs a valid module")
         tree = {}
         self.defaults = ctx.opts.sample_defaults
         self.doctype = ctx.opts.doctype

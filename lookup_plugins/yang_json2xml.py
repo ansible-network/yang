@@ -21,7 +21,7 @@ options:
       - Input json configuration file path that adheres to a particular yang model.
     required: True
     type: path
-  root:
+  doctype:
     description:
       - Specifies the target root node of the generated xml. The default value is C(config)
     default: config
@@ -143,7 +143,7 @@ class LookupModule(LookupBase):
         except Exception as exc:
             raise AnsibleError("Failed to load json configuration: %s" % (to_text(exc, errors='surrogate_or_strict')))
 
-        root_node = kwargs.get('root', 'config')
+        root_node = kwargs.get('doctype', 'config')
 
         base_pyang_path = sys.modules['pyang'].__file__
         pyang_exec_path = find_file_in_path('pyang')
@@ -164,8 +164,12 @@ class LookupModule(LookupBase):
         jtox_file_path = os.path.realpath(os.path.expanduser(jtox_file_path))
         xml_file_path = os.path.realpath(os.path.expanduser(xml_file_path))
 
+        yang_metada_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../files/yang')
+        yang_metadata_path = os.path.join(yang_metada_dir, 'nc-op.yang')
+        search_path += ":%s" % yang_metada_dir
+
         # fill in the sys args before invoking pyang
-        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, '-p', search_path, "--lax-quote-checks"] + yang_files
+        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, '-p', search_path, "--lax-quote-checks"] + yang_files + [yang_metadata_path]
 
         try:
             pyang_exec.run()

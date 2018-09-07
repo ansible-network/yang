@@ -16,7 +16,6 @@ if is_py2:
 else:
     import queue as queue
 
-from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.module_utils._text import to_bytes, to_text
 from ansible.module_utils.connection import Connection, ConnectionError
@@ -27,11 +26,6 @@ try:
 except ImportError:
     from ansible.utils.display import Display
     display = Display()
-try:
-    from lxml import etree
-    HAS_XML = True
-except ImportError:
-    HAS_XML = False
 
 try:
     from lxml.etree import tostring
@@ -45,11 +39,6 @@ except ImportError:
     HAS_JXMLEASE = False
 
 
-def warning(msg):
-    if C.ACTION_WARNINGS:
-        display.warning(msg)
-
-
 class SchemaStore(object):
     def __init__(self, conn):
         self._conn = conn
@@ -57,33 +46,20 @@ class SchemaStore(object):
         self._all_schema_list = None
 
     def get_schema_description(self):
-        content = '''
-          <filter>
-            <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
-              <schemas>
-                <schema>
-                    <identifier/>
-                </schema>
-              </schemas>
-            </netconf-state>
-          </filter>
+        get_filter = '''
+        <filter type="subtree" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+          <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
+            <schemas/>
+          </netconf-state>
+        </filter>
         '''
-        xml_request = '<%s>%s</%s>' % ('get', content, 'get')
         try:
-            response = self._conn.dispatch(xml_request)
+            response = self._conn.get(filter=get_filter)
         except ConnectionError as e:
             raise ValueError(to_text(e))
-        response = to_bytes(response, errors='surrogate_or_strict')
-        tree = etree.ElementTree(etree.fromstring(response))
-        tree_root = tree.getroot()
-        res_str = etree.tostring(tree_root, pretty_print=True)
 
-        if not HAS_JXMLEASE:
-            raise ValueError('jxmlease is required to store response in json format'
-                             'but does not appear to be installed. '
-                             'It can be installed using `pip install jxmlease`')
-        res_json = jxmlease.parse(res_str)
-        self._all_schema_list = res_json["data"]["netconf-state"]["schemas"]["schema"]
+        res_json = jxmlease.parse(response)
+        self._all_schema_list = res_json["rpc-reply"]["data"]["netconf-state"]["schemas"]["schema"]
         return
 
     def get_one_schema(self, schema_id, result):
@@ -92,21 +68,17 @@ class SchemaStore(object):
 
         found = False
         data_model = None
+
         # Search for schema that are supported by device.
         # Also get namespace for retrieval
         schema_cache_entry = {}
         for index, schema_list in enumerate(self._all_schema_list):
-            if to_bytes(schema_id) == to_bytes(schema_list["identifier"],
-                                               errors='surrogate_or_strict'):
-                schema_cache_entry["id"] = to_bytes(schema_id,
-                                                    errors='surrogate_or_strict')
-                schema_cache_entry["ns"] = self._all_schema_list[index]["namespace"]
-                schema_cache_entry["format"] = self._all_schema_list[index]["format"]
+            if schema_id == schema_list["identifier"]:
                 found = True
                 break
 
         if found:
-            content = ("<identifier> %s </identifier>" % (schema_cache_entry["id"]))
+            content = ("<identifier>%s</identifier>" % schema_id)
             xmlns = "urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"
             xml_request = '<%s xmlns="%s"> %s </%s>' % ('get-schema', xmlns,
                                                         content, 'get-schema')
@@ -114,16 +86,7 @@ class SchemaStore(object):
                 response = self._conn.dispatch(xml_request)
             except ConnectionError as e:
                 raise ValueError(to_text(e))
-            response = to_bytes(response, errors='surrogate_or_strict')
-            tree = etree.ElementTree(etree.fromstring(response))
-            tree_root = tree.getroot()
-            res_str = etree.tostring(tree_root, pretty_print=True)
-
-            if not HAS_JXMLEASE:
-                raise ValueError('jxmlease is required to store response in json format'
-                                 'but does not appear to be installed. '
-                                 'It can be installed using `pip install jxmlease`')
-            res_json = jxmlease.parse(res_str)
+            res_json = jxmlease.parse(response)
             data_model = res_json["rpc-reply"]["data"]
             display.vvv("Fetched '%s' yang model" % schema_id)
             result['fetched'][schema_id] = data_model
@@ -180,6 +143,11 @@ class ActionModule(ActionBase):
             schema = self._task.args['schema']
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
+
+        if not HAS_JXMLEASE:
+            raise ValueError('jxmlease is required to store response in json format'
+                             'but does not appear to be installed. '
+                             'It can be installed using `pip install jxmlease`')
 
         socket_path = self._connection.socket_path
         conn = Connection(socket_path)

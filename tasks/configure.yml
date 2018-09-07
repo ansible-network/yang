@@ -15,5 +15,5 @@
 
 - name: "configure: validate input json config against fetched yang modules and push it on {{ inventory_hostname }}"
   netconf_config:
-    xml: "{{ lookup('yang_json2xml', yang_config_file, yang_file=yang_file, search_path=yang_search_path, keep_tmp_files=yang_keep_tmp_files) }}"
+    xml: "{{ lookup('yang_json2xml', yang_config_file, yang_file=yang_file, search_path=yang_search_path, keep_tmp_files=yang_keep_tmp_files, doctype=yang_doctype) }}"
   register: result

@@ -13,7 +13,7 @@
 
 - name: Convert interface json config to xml with data as root node
   set_fact:
-    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, root='data', yang_file=yang_file, search_path=search_path) }}"
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, doctype='data', yang_file=yang_file, search_path=search_path) }}"
 
 
 - assert:

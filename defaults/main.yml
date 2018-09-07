@@ -19,9 +19,9 @@ yang_spec_dir: "~/.ansible/yang/spec"
 yang_json_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.json"
 yang_xml_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.xml"
 yang_tree_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.tree"
-yang_doctype: "config"
 yang_annotations: false
 yang_deafults: false
 
-# comman variables
+# common variables
 yang_keep_tmp_files: false
+yang_doctype: "config"
