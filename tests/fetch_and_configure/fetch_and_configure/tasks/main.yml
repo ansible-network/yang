@@ -1,0 +1,8 @@
+---
+- name: set role path
+  set_fact:
+    yang_role_path: "{{ role_path.split('/tests/fetch_and_configure/fetch_and_configure')[0] }}"
+
+- name: fetch and configure test
+  import_tasks: iosxr.yml
+  when: "ansible_network_os == 'iosxr'"

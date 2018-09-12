@@ -1,0 +1,4 @@
+- hosts: appliance
+  connection: netconf
+  roles:
+    - fetch_and_generate_spec
