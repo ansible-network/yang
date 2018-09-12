@@ -1,0 +1,5 @@
+#- hosts: appliance
+- hosts: iosxr
+  connection: netconf
+  roles:
+    - fetch_and_configure

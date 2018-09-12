@@ -1,0 +1,81 @@
+---
+- debug: msg="START fetch_and_generate_spec/iosxr.yaml on connection={{ ansible_connection }}"
+
+- name: setup - remove yang folder from default path
+  file: &rm_dir
+    path: "~/.ansible/yang"
+    state: absent
+
+- name: include yang configure function
+  include_role:
+    name: "{{ yang_role_path }}"
+    tasks_from: spec
+  loop:
+     - openconfig-interfaces
+  loop_control:
+    loop_var: yang_model_name
+  vars:
+    ansible_network_provider: cisco_iosxr
+
+- name: check if yang openconfig-interfaces file is fetched
+  set_fact:
+    yang_file_openconfig_interfaces: "{{ lookup('file', '~/.ansible/yang/fetch/openconfig-interfaces.yang')}}"
+
+- assert:
+    that:
+      - "'module openconfig-interfaces' in yang_file_openconfig_interfaces"
+
+- name: check if openconfig-extensions.yang file is fetched
+  set_fact:
+    yang_file_openconfig_extensions: "{{ lookup('file', '~/.ansible/yang/fetch/openconfig-extensions.yang')}}"
+
+- assert:
+    that:
+      - "'module openconfig-extensions' in yang_file_openconfig_extensions"
+
+- name: check if ietf-interfaces.yang file is fetched
+  set_fact:
+    yang_file_ietf_interfaces: "{{ lookup('file', '~/.ansible/yang/fetch/ietf-interfaces.yang')}}"
+
+- assert:
+    that:
+      - "'module ietf-interfaces' in yang_file_ietf_interfaces"
+
+- name: check if ietf-yang-types.yang file is fetched
+  set_fact:
+    yang_file_ietf_yang_types: "{{ lookup('file', '~/.ansible/yang/fetch/ietf-yang-types.yang')}}"
+
+- assert:
+    that:
+      - "'module ietf-yang-types' in yang_file_ietf_yang_types"
+
+- name: check if skeleton json configuration file is created
+  set_fact:
+    yang_spec_skeleton_json: "{{ lookup('file', '~/.ansible/yang/spec/openconfig-interfaces.json')}}"
+
+- assert:
+    that:
+      - "'openconfig-interfaces:interfaces' in yang_spec_skeleton_json"
+
+- name: check if skeleton xml configuration file is created
+  set_fact:
+    yang_spec_skeleton_xml: "{{ lookup('file', '~/.ansible/yang/spec/openconfig-interfaces.xml')}}"
+
+- assert:
+    that:
+      - "'<interface>' in yang_spec_skeleton_xml"
+      - "'<subinterfaces>' in yang_spec_skeleton_xml"
+
+- name: check if yang tree file is created
+  set_fact:
+    yang_spec_tree: "{{ lookup('file', '~/.ansible/yang/spec/openconfig-interfaces.tree')}}"
+
+- assert:
+    that:
+      - "'+--rw interfaces' in yang_spec_tree"
+      - "'|  +--rw description?   string' in yang_spec_tree"
+
+- name: teardown - remove yang folder from default path
+  file: *rm_dir
+
+- debug: msg="END fetch_and_generate_spec/iosxr.yaml on connection={{ ansible_connection }}"
