@@ -1,6 +1,7 @@
 ---
 - name: initialize function
   include_tasks: includes/init.yaml
+  when: yang_fetch_schema|bool == false
 
 - name: validate role spec
   validate_role_spec:
