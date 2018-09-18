@@ -17,7 +17,7 @@ else:
     import queue as queue
 
 from ansible.plugins.action import ActionBase
-from ansible.module_utils._text import to_bytes, to_text
+from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import Connection, ConnectionError
 from ansible.errors import AnsibleError
 
@@ -26,11 +26,6 @@ try:
 except ImportError:
     from ansible.utils.display import Display
     display = Display()
-
-try:
-    from lxml.etree import tostring
-except ImportError:
-    from xml.etree.ElementTree import tostring
 
 try:
     import jxmlease

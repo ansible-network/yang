@@ -59,12 +59,14 @@ EXAMPLES = """
 - name: Get interface yang config spec without defaults
   set_fact:
     interfaces_spec: "{{ lookup('yang_spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
-                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True, doctype='data') }}"
+                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True,
+                            doctype='data') }}"
 
 - name: Get interface yang spec with defaults and state data
   set_fact:
     interfaces_spec: "{{ lookup('yang_spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
-                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True, doctype='data') }}"
+                            search_path='openconfig/public/release/models:pyang/modules/', defaults=True,
+                            doctype='data') }}"
 """
 
 RETURN = """
@@ -190,7 +192,7 @@ from copy import deepcopy
 from collections import Sequence
 
 from ansible.plugins.lookup import LookupBase
-from ansible.module_utils.six import StringIO, iteritems, string_types, PY3
+from ansible.module_utils.six import StringIO
 from ansible.utils.path import unfrackpath, makedirs_safe
 from ansible.errors import AnsibleError
 
@@ -202,9 +204,6 @@ except ImportError:
 
 try:
     from pyang import plugin, error
-    from pyang import statements
-    from pyang.util import unique_prefixes
-    from pyang.types import Decimal64Value
 except ImportError:
     raise AnsibleError("pyang is not installed")
 
@@ -258,8 +257,8 @@ class LookupModule(LookupBase):
         json_file_path = os.path.realpath(os.path.expanduser(json_file_path))
 
         # fill in the sys args before invoking pyang to retrieve xml skeleton
-        sample_xml_skeleton_cmd = [pyang_exec_path, '-f', 'sample-xml-skeleton', '-o', xml_file_path, yang_file, '-p', search_path,
-                                   "--sample-xml-skeleton-doctype", doctype, "--lax-quote-checks"]
+        sample_xml_skeleton_cmd = [pyang_exec_path, '-f', 'sample-xml-skeleton', '-o', xml_file_path, yang_file, '-p',
+                                   search_path, "--sample-xml-skeleton-doctype", doctype, "--lax-quote-checks"]
 
         if defaults:
             sample_xml_skeleton_cmd.append("--sample-xml-skeleton-defaults")
@@ -286,7 +285,8 @@ class LookupModule(LookupBase):
         sys.stderr.flush()
 
         # fill in the sys args before invoking pyang to retrieve tree structure
-        tree_cmd = [pyang_exec_path, '-f', 'tree', '-o', tree_file_path, yang_file, '-p', search_path, "--lax-quote-checks"]
+        tree_cmd = [pyang_exec_path, '-f', 'tree', '-o', tree_file_path, yang_file, '-p', search_path,
+                    "--lax-quote-checks"]
 
         try:
             subprocess.check_output(' '.join(tree_cmd), stderr=subprocess.STDOUT, shell=True)
@@ -310,8 +310,9 @@ class LookupModule(LookupBase):
         shutil.copy(plugin_file_src, plugindir)
 
         # fill in the sys args before invoking pyang to retrieve json skeleton
-        sample_json_skeleton_cmd = [pyang_exec_path, '--plugindir', plugindir, '-f', 'sample-json-skeleton', '-o', json_file_path,
-                                    yang_file, '-p', search_path, '--lax-quote-checks', '--sample-json-skeleton-doctype', doctype]
+        sample_json_skeleton_cmd = [pyang_exec_path, '--plugindir', plugindir, '-f', 'sample-json-skeleton', '-o',
+                                    json_file_path, yang_file, '-p', search_path, '--lax-quote-checks',
+                                    '--sample-json-skeleton-doctype', doctype]
 
         if defaults:
             sample_json_skeleton_cmd.append("--sample-json-skeleton-defaults")
@@ -343,6 +344,8 @@ class LookupModule(LookupBase):
         if not keep_tmp_files:
             shutil.rmtree(plugindir, ignore_errors=True)
         res.append(output)
+
+        sys.argv = saved_arg
         return res
 
 

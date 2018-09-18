@@ -50,8 +50,9 @@ options:
 
 EXAMPLES = """
 - name: translate json to xml
-  debug: msg="{{ lookup('yang_json2xml', config_json, yang_file='openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
-                            search_path='openconfig/public/release/models:pyang/modules/') }}"
+  debug: msg="{{ lookup('yang_json2xml', config_json,
+                         yang_file='openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
+                         search_path='openconfig/public/release/models:pyang/modules/') }}"
 """
 
 RETURN = """
@@ -75,11 +76,6 @@ from ansible.module_utils.six import StringIO
 from ansible.utils.path import unfrackpath, makedirs_safe
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
-
-try:
-    import pyang
-except ImportError:
-    raise AnsibleError("pyang is not installed")
 
 try:
     from lxml import etree
@@ -144,8 +140,12 @@ class LookupModule(LookupBase):
             raise AnsibleError("Failed to load json configuration: %s" % (to_text(exc, errors='surrogate_or_strict')))
 
         root_node = kwargs.get('doctype', 'config')
+        try:
+            pyang_mod = sys.modules['pyang']
+        except KeyError:
+            raise AnsibleError("pyang is not installed")
 
-        base_pyang_path = sys.modules['pyang'].__file__
+        base_pyang_path = pyang_mod.__file__
         pyang_exec_path = find_file_in_path('pyang')
         pyang_exec = imp.load_source('pyang', pyang_exec_path)
 
@@ -169,7 +169,8 @@ class LookupModule(LookupBase):
         search_path += ":%s" % yang_metada_dir
 
         # fill in the sys args before invoking pyang
-        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, '-p', search_path, "--lax-quote-checks"] + yang_files + [yang_metadata_path]
+        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, '-p', search_path,
+                    "--lax-quote-checks"] + yang_files + [yang_metadata_path]
 
         try:
             pyang_exec.run()
