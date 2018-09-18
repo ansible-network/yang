@@ -78,6 +78,11 @@ from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
 
 try:
+    import pyang        # noqa
+except ImportError:
+    raise AnsibleError("pyang is not installed")
+
+try:
     from lxml import etree
 except ImportError:
     raise AnsibleError("lxml is not installed")
@@ -140,12 +145,8 @@ class LookupModule(LookupBase):
             raise AnsibleError("Failed to load json configuration: %s" % (to_text(exc, errors='surrogate_or_strict')))
 
         root_node = kwargs.get('doctype', 'config')
-        try:
-            pyang_mod = sys.modules['pyang']
-        except KeyError:
-            raise AnsibleError("pyang is not installed")
 
-        base_pyang_path = pyang_mod.__file__
+        base_pyang_path = sys.modules['pyang'].__file__
         pyang_exec_path = find_file_in_path('pyang')
         pyang_exec = imp.load_source('pyang', pyang_exec_path)
 
