@@ -36,4 +36,5 @@ galaxy_info:
     - iosxr
     - junos
 
-dependencies: []
+dependencies:
+  - ansible-network.network-engine
