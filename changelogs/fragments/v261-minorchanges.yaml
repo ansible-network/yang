@@ -1,0 +1,4 @@
+minor_changes:
+- Add network-engine role dependency in meta file `yang#14 <https://github.com/ansible-network/yang/pull/14>`_.
+- Check for ansible-min-version `yang#16 <https://github.com/ansible-network/yang/pull/16>`_.
+- Add support for bindep.txt `yang#25 <https://github.com/ansible-network/yang/pull/25>`_.

@@ -1,13 +1,30 @@
 ====================
-Ansible Network yang
+Ansible Network Yang
 ====================
 
-.. _Ansible Network yang_v2.6.0:
+.. _Ansible Network Yang_v2.6.1:
+
+v2.6.1
+======
+
+.. _Ansible Network Yang_v2.6.1_Minor Changes:
+
+Minor Changes
+-------------
+
+- Add network-engine role dependency in meta file `yang#14 <https://github.com/ansible-network/yang/pull/14>`_.
+
+- Check for ansible-min-version `yang#16 <https://github.com/ansible-network/yang/pull/16>`_.
+
+- Add support for bindep.txt `yang#25 <https://github.com/ansible-network/yang/pull/25>`_.
+
+
+.. _Ansible Network Yang_v2.6.0:
 
 v2.6.0
-==============
+======
 
-.. _Ansible Network yang_v2.6.0_Major Changes:
+.. _Ansible Network Yang_v2.6.0_Major Changes:
 
 Major Changes
 -------------
@@ -17,7 +34,7 @@ Major Changes
 - This role provides functions to perform automation activities using yang models using supported transports.
 
 
-.. _Ansible Network yang_v2.6.0_New Lookup Plugins:
+.. _Ansible Network Yang_v2.6.0_New Lookup Plugins:
 
 New Lookup Plugins
 ------------------
@@ -27,7 +44,7 @@ New Lookup Plugins
 - NEW ``yang_spec`` Plugin to generate skeleton json and xml configuration for reference config generation and yang tree representation.
 
 
-.. _Ansible Network yang_v2.6.0_New Modules:
+.. _Ansible Network Yang_v2.6.0_New Modules:
 
 New Modules
 -----------
@@ -35,7 +52,7 @@ New Modules
 - NEW ``yang_fetch`` module to fetch yang models from remote network device if supported.
 
 
-.. _Ansible Network yang_v2.6.0_New Functions:
+.. _Ansible Network Yang_v2.6.0_New Functions:
 
 New Functions
 -------------
@@ -45,3 +62,4 @@ New Functions
 - NEW ``configure`` function to validate input ``json`` configuration against a yang model push it to device.
 
 - NEW ``spec`` function to generate skeleton json and xml configuration for reference config generation and yang tree representation from given yang model.
+
