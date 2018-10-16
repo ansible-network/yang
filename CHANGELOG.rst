@@ -2,6 +2,21 @@
 Ansible Network Yang
 ====================
 
+.. _Ansible Network Yang_v2.6.2:
+
+v2.6.2
+======
+
+.. _Ansible Network Yang_v2.6.2_Minor Changes:
+
+Minor Changes
+-------------
+
+- Remove travis-ci support  `yang#30 <https://github.com/ansible-network/yang/pull/30>`_.
+
+- Resync tox.ini file `yang#29 <https://github.com/ansible-network/yang/pull/29>`_.
+
+
 .. _Ansible Network Yang_v2.6.1:
 
 v2.6.1
@@ -62,4 +77,3 @@ New Functions
 - NEW ``configure`` function to validate input ``json`` configuration against a yang model push it to device.
 
 - NEW ``spec`` function to generate skeleton json and xml configuration for reference config generation and yang tree representation from given yang model.
-
