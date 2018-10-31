@@ -1,7 +1,4 @@
 ---
-#- name: debug
-#  debug:
-#    msg: "{{ ansible_network_provider }}"
 - name: enable netconf
   include_role:
     name: "{{ ansible_network_provider }}"
