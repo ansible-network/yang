@@ -32,6 +32,13 @@ argument_spec:
     type: str
     default: ~/.ansible/yang/fetch
 
+  yang_search_path:
+    description:
+      - Provide a relative or absolute path which points to dependent yang models
+        required by the yang model mentioned as value of I(yang_file). The value
+        can be comma seperated path.
+    type: str
+
   yang_keep_tmp_files:
     description:
       - This is a boolean flag to indicate if the intermediate files generated

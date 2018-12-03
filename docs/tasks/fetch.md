@@ -35,3 +35,13 @@ For arguments (options) that can be passed to this function [refer](https://gith
 
 * If netconf is already enabled on network device and if you don't want to run the task that
 enables netconf if not already enabled set the role variable `yang_netconf_enable_task_run` to `false`
+* Curated logs required to identify issues in intermediate steps are directed in log file.
+  To enable these logs set by log_path configuration variable in ansible configuration file
+  ```
+  [defaults]
+  log_path=<log_file_path>
+  ```
+  or by setting enviornment variable
+  ```
+  $ export ANSIBLE_LOG_PATH='<log_file_path>'
+  ```

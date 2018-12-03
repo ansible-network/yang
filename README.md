@@ -42,6 +42,7 @@ on yang/netconf supported devices.
 * `configure` [source](https://github.com/ansible-network/yang/blob/devel/tasks/configure.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/configure.md).
 * `spec` [source](https://github.com/ansible-network/yang/blob/devel/tasks/spec.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/spec.md).
 * `fetch` [source](https://github.com/ansible-network/yang/blob/devel/tasks/fetch.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/fetch.md).
+* `get` [source](https://github.com/ansible-network/yang/blob/devel/tasks/get.yml) [docs](https://github.com/ansible-network/yang/blob/devel/docs/tasks/get.md).
 
 ## Variables
 
@@ -50,6 +51,7 @@ The following are the list of variables for each of the role functions.
 * `configure`: [options](https://github.com/ansible-network/yang/blob/devel/meta/configure_options.yml)
 * `spec`: [options](https://github.com/ansible-network/yang/blob/devel/meta/spec_options.yml)
 * `fetch`: [options](https://github.com/ansible-network/yang/blob/devel/meta/fetch_options.yml)
+* `fetch`: [options](https://github.com/ansible-network/yang/blob/devel/meta/get_options.yml)
 
 
 ## Modules
@@ -66,7 +68,25 @@ The following is a list of plugins that are provided by this role.
 
 * `yang_json2xml` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py).
 * `yang_spec` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py).
+* `yang_xml2json [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_xml2json.py).
 
+### netconf
+
+* `iosxr` [source](https://github.com/ansible-network/yang/blob/devel/netconf_plugins/iosxr.py).
+
+### Note:
+```
+The iosxr netconf plugin is added to this role due the existing issue in iosxr plugin
+shipped with ansible package. This issue will be fixed in ansible version 2.8
+and the plugin will be removed from this role after ansible 2.8 is released.
+This plugin can be used by setting configuration variable in ansible configuration file
+
+[defaults]
+netconf_plugins= <yang_role_path>/netconf_plugins
+
+or by setting enviornment variable
+$ export ANSIBLE_NETCONF_PLUGINS=<yang_role_path>/netconf_plugins
+```
 ### Filter
 
 ## Dependencies

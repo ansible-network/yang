@@ -1,0 +1,40 @@
+---
+- hosts: iosxr
+  connection: netconf
+  gather_facts: no
+  tasks:
+  - name: fetch yang file from remote device
+    include_role:
+      name: ansible-network.yang
+      tasks_from: fetch
+    loop:
+       - Cisco-IOS-XR-ifmgr-cfg
+       - Cisco-IOS-XR-drivers-media-eth-cfg
+       - Cisco-IOS-XR-ipv4-io-cfg
+       - Cisco-IOS-XR-ipv4-io-cfg
+       - Cisco-IOS-XR-infra-rsi-cfg
+       - Cisco-IOS-XR-l2-eth-infra-cfg
+    loop_control:
+      loop_var: yang_model_name
+    vars:
+      ansible_network_provider: cisco_iosxr
+      yang_dir: "{{ playbook_dir }}/cisco_iosxr_yang"
+
+
+  - name: get configuration/state data and convert to yang json format as per rfc 7951
+    include_role:
+      name: ansible-network.yang
+      tasks_from: get
+    vars:
+       yang_get_filter: <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"><interface-configuration></interface-configuration></interface-configurations>
+       ansible_network_provider: cisco_iosxr
+       yang_netconf_enable_task_run: false
+       yang_datastore_source: running
+       yang_modules_file_path: "{{ playbook_dir }}/cisco_iosxr_yang/*.yang"
+       yang_search_path: "{{ playbook_dir }}/cisco_iosxr_yang"
+       yang_keep_tmp_files: true
+       yang_get_output: ""
+
+  - name: print json output
+    debug:
+      msg: "{{ yang_get_output }}"

@@ -1,0 +1,23 @@
+---
+- name: initialize function
+  include_tasks: includes/init.yml
+
+- name: validate role spec
+  validate_role_spec:
+    spec: get_options.yml
+
+- block:
+  - name: enable netconf
+    include_tasks: includes/netconf.yml
+  when: yang_netconf_enable_task_run|bool == true
+
+- name: "get configuration and/or state data from {{ inventory_hostname }}"
+  netconf_get:
+    source: "{{ yang_datastore_source | default(omit) }}"
+    filter: "{{ yang_get_filter | default(omit) }}"
+    lock: "{{ yang_datastore_lock | default('never') }}"
+  register: yang_get_response
+
+- name: convert xml to json encoding of data model with YANG as per rfc 7951
+  set_fact:
+    yang_get_output: "{{ lookup('yang_xml2json', yang_get_response.stdout, yang_file=yang_modules_file_path, search_path=yang_search_path, keep_tmp_files=yang_keep_tmp_files) }}"

@@ -1,0 +1,47 @@
+---
+- debug: msg="START get/iosxr.yml on connection={{ ansible_connection }}"
+
+- name: setup - remove yang folder from default path
+  file: &rm_dir
+    path: "~/.ansible/yang"
+    state: absent
+
+- name: fetch yang file from remote device
+  include_role:
+    name: ansible-network.yang
+    tasks_from: fetch
+  loop:
+     - Cisco-IOS-XR-ifmgr-cfg
+     - Cisco-IOS-XR-drivers-media-eth-cfg
+     - Cisco-IOS-XR-ipv4-io-cfg
+     - Cisco-IOS-XR-ipv4-io-cfg
+     - Cisco-IOS-XR-infra-rsi-cfg
+     - Cisco-IOS-XR-l2-eth-infra-cfg
+  loop_control:
+    loop_var: yang_model_name
+  vars:
+    ansible_network_provider: cisco_iosxr
+    yang_dir: "~/.ansible/yang/cisco_iosxr_yang"
+
+- name: get configuration/state data and convert to yang json format as per rfc 7951
+  include_role:
+    name: ansible-network.yang
+    tasks_from: get
+  vars:
+     yang_get_filter: <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"><interface-configuration></interface-configuration></interface-configurations>
+     ansible_network_provider: cisco_iosxr
+     yang_netconf_enable_task_run: false
+     yang_datastore_source: running
+     yang_modules_file_path: "~/.ansible/yang/cisco_iosxr_yang/*.yang"
+     yang_search_path: "~/.ansible/yang/cisco_iosxr_yang"
+     yang_get_output: {}
+
+- assert:
+    that:
+      - "'Cisco-IOS-XR-ifmgr-cfg:interface-configurations' in yang_get_output"
+      - "'interface-configuration' in yang_get_output['Cisco-IOS-XR-ifmgr-cfg:interface-configurations']"
+
+- name: teardown - remove yang folder from default path
+  file: *rm_dir
+
+- debug: msg="END get/iosxr.yml on connection={{ ansible_connection }}"

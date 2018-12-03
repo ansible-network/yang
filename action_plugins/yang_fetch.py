@@ -19,6 +19,7 @@ else:
 from ansible.plugins.action import ActionBase
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import Connection, ConnectionError
+from ansible.module_utils.network.common.netconf import remove_namespaces
 from ansible.errors import AnsibleError
 
 try:
@@ -49,12 +50,16 @@ class SchemaStore(object):
         </filter>
         '''
         try:
-            response = self._conn.get(filter=get_filter)
+            resp = self._conn.get(filter=get_filter)
+            response = remove_namespaces(resp)
         except ConnectionError as e:
             raise ValueError(to_text(e))
 
         res_json = jxmlease.parse(response)
-        self._all_schema_list = res_json["rpc-reply"]["data"]["netconf-state"]["schemas"]["schema"]
+        if "rpc-reply" in res_json:
+            self._all_schema_list = res_json["rpc-reply"]["data"]["netconf-state"]["schemas"]["schema"]
+        else:
+            self._all_schema_list = res_json["data"]["netconf-state"]["schemas"]["schema"]
         return
 
     def get_one_schema(self, schema_id, result):

@@ -14,6 +14,9 @@ yang_dir: "~/.ansible/yang/fetch"
 yang_file: "{{ yang_dir }}/{{ yang_model_name }}.yang"
 yang_search_path: "{{ yang_dir }}"
 
+# yang tools yang_xml2json variables
+yang_modules_file_path: "{{ yang_dir }}/*.yang"
+
 # yang_spec variables
 yang_spec_dir: "~/.ansible/yang/spec"
 yang_json_config_file: "{{ yang_spec_dir }}/{{ yang_model_name }}.json"
