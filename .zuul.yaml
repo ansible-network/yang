@@ -1,8 +1,6 @@
 - project:
     check:
       jobs:
-        - ansible-test-sanity:
-            voting: False
         - ansible-network-tox-py27:
             required-projects:
               - name: github.com/ansible-network/network-engine
