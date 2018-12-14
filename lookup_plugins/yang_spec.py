@@ -378,8 +378,7 @@ class SampleJSONSkeletonPlugin(plugin.PyangPlugin):
             optparse.make_option("--sample-json-skeleton-doctype",
                                  dest="doctype",
                                  default="data",
-                                 help="Type of sample JSON document " +
-                                 "(data or config)."),
+                                 help="Type of sample JSON document (data or config)."),
             optparse.make_option("--sample-json-skeleton-defaults",
                                  action="store_true",
                                  dest="sample_defaults",
