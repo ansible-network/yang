@@ -2,6 +2,27 @@
 Ansible Network Yang
 ====================
 
+.. _Ansible Network Yang_v2.7.0:
+
+v2.7.0
+======
+
+.. _Ansible Network Yang_v2.7.0_New Functions:
+
+New Functions
+-------------
+
+- Add support for get function `yang#33 <https://github.com/ansible-network/yang/pull/33>`_.
+
+
+.. _Ansible Network Yang_v2.7.0_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix connection type check issue `yang#32 <https://github.com/ansible-network/yang/pull/32>`_.
+
+
 .. _Ansible Network Yang_v2.6.2:
 
 v2.6.2
@@ -77,3 +98,4 @@ New Functions
 - NEW ``configure`` function to validate input ``json`` configuration against a yang model push it to device.
 
 - NEW ``spec`` function to generate skeleton json and xml configuration for reference config generation and yang tree representation from given yang model.
+
