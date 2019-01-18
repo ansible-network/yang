@@ -14,7 +14,7 @@
       - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['index'] == '0'"
       - "interface_spec['json_skeleton']['openconfig-interfaces:interfaces']['interface'][0]['subinterfaces']['subinterface'][0]['config']['enabled'] == 'True'"
       - "'<interface>' in interface_spec['xml_skeleton']"
-      - "'<loopback-mode>False</loopback-mode>' in interface_spec['xml_skeleton']"
+      - "'<loopback-mode>false</loopback-mode>' in interface_spec['xml_skeleton']"
       - "'module: openconfig-interfaces' in interface_spec['tree']"
       - "'+--rw interface* [name]' in interface_spec['tree']"
 
