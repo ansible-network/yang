@@ -2,6 +2,19 @@
 Ansible Network Yang
 ====================
 
+.. _Ansible Network Yang_v2.7.1:
+
+v2.7.1
+======
+
+.. _Ansible Network Yang_v2.7.1_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix issue in spec generation `yang#40 <https://github.com/ansible-network/yang/pull/40>`_.
+
+
 .. _Ansible Network Yang_v2.7.0:
 
 v2.7.0
