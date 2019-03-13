@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: all
   connection: local
   roles:
     - yang_json2xml

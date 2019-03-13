@@ -230,7 +230,7 @@ class LookupModule(LookupBase):
 
         for path in search_path.split(':'):
             path = os.path.realpath(os.path.expanduser(path))
-            if path is not '' and not os.path.isdir(path):
+            if path != '' and not os.path.isdir(path):
                 raise AnsibleError('%s is invalid directory path' % path)
 
         keep_tmp_files = kwargs.pop('keep_tmp_files', False)
