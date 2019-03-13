@@ -128,7 +128,7 @@ class LookupModule(LookupBase):
                 abs_search_path = path
             else:
                 abs_search_path += ':' + path
-            if path is not '' and not os.path.isdir(path):
+            if path != '' and not os.path.isdir(path):
                 raise AnsibleError('%s is invalid directory path' % path)
 
         search_path = abs_search_path

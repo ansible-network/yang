@@ -157,11 +157,14 @@ class LookupModule(LookupBase):
         saved_stderr = sys.stderr
         sys.stdout = sys.stderr = StringIO()
 
+        plugin_instance = str(uuid.uuid4())
+
         plugindir = unfrackpath(JSON2XML_DIR_PATH)
         makedirs_safe(plugindir)
+        makedirs_safe(os.path.join(plugindir, plugin_instance))
 
-        jtox_file_path = os.path.join(JSON2XML_DIR_PATH, '%s.%s' % (str(uuid.uuid4()), 'jtox'))
-        xml_file_path = os.path.join(JSON2XML_DIR_PATH, '%s.%s' % (str(uuid.uuid4()), 'xml'))
+        jtox_file_path = os.path.join(JSON2XML_DIR_PATH, plugin_instance, '%s.%s' % (str(uuid.uuid4()), 'jtox'))
+        xml_file_path = os.path.join(JSON2XML_DIR_PATH, plugin_instance, '%s.%s' % (str(uuid.uuid4()), 'xml'))
         jtox_file_path = os.path.realpath(os.path.expanduser(jtox_file_path))
         xml_file_path = os.path.realpath(os.path.expanduser(xml_file_path))
 
@@ -178,13 +181,15 @@ class LookupModule(LookupBase):
         except SystemExit:
             pass
         except Exception as e:
-            shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+            temp_dir = os.path.join(JSON2XML_DIR_PATH, plugin_instance)
+            shutil.rmtree(os.path.realpath(os.path.expanduser(temp_dir)), ignore_errors=True)
             raise AnsibleError('Error while generating intermediate (jtox) file: %s' % e)
         finally:
             err = sys.stderr.getvalue()
             if err and 'error' in err.lower():
                 if not keep_tmp_files:
-                    shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+                    temp_dir = os.path.join(JSON2XML_DIR_PATH, plugin_instance)
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(temp_dir)), ignore_errors=True)
                 raise AnsibleError('Error while generating intermediate (jtox) file: %s' % err)
 
         json2xml_exec_path = find_file_in_path('json2xml')
@@ -204,7 +209,8 @@ class LookupModule(LookupBase):
             err = sys.stderr.getvalue()
             if err and 'error' in err.lower():
                 if not keep_tmp_files:
-                    shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+                    temp_dir = os.path.join(JSON2XML_DIR_PATH, plugin_instance)
+                    shutil.rmtree(os.path.realpath(os.path.expanduser(temp_dir)), ignore_errors=True)
                 raise AnsibleError('Error while translating to xml: %s' % err)
             sys.argv = saved_arg
             sys.stdout = saved_stdout
@@ -217,7 +223,8 @@ class LookupModule(LookupBase):
             raise AnsibleError('Error while reading xml document: %s' % e)
         finally:
             if not keep_tmp_files:
-                shutil.rmtree(os.path.realpath(os.path.expanduser(JSON2XML_DIR_PATH)), ignore_errors=True)
+                temp_dir = os.path.join(JSON2XML_DIR_PATH, plugin_instance)
+                shutil.rmtree(os.path.realpath(os.path.expanduser(temp_dir)), ignore_errors=True)
         res.append(etree.tostring(root))
 
         return res
