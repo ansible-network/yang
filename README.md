@@ -68,7 +68,7 @@ The following is a list of plugins that are provided by this role.
 
 * `yang_json2xml` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_json2xml.py).
 * `yang_spec` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_spec.py).
-* `yang_xml2json [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_xml2json.py).
+* `yang_xml2json` [source](https://github.com/ansible-network/yang/blob/devel/lookup_plugins/yang_xml2json.py).
 
 ### netconf
 
