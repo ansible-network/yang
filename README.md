@@ -1,5 +1,8 @@
 # yang
 
+## Note
+The development of this role is freezed and the functionality and new feature development is move to [community.yang](https://github.com/ansible-collections/community.yang) collection.
+
 This role provides the foundation for building network roles by providing
 modules and plugins related to yang support.
 
