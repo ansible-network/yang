@@ -1,4 +1,10 @@
+# Note:
+This role is deprecated and all the future development work is moved to [Ansible yang collection](https://github.com/ansible-collections/community.yang)
+No new Pull request or issues will be accepted in this repository.
+
+
 # yang
+
 
 This role provides the foundation for building network roles by providing
 modules and plugins related to yang support.
