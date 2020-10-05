@@ -1,8 +1,0 @@
----
-- name: import dependency role for test
-  import_role:
-    name: "{{ role_path.split('/tests/yang_fetch/yang_fetch')[0] }}"
-
-- name: yang_fetch test
-  import_tasks: openconfig.yml
-  when: "ansible_network_os == 'iosxr'"

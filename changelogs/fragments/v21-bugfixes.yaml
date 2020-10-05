@@ -1,2 +1,0 @@
-bugfixes:
-- Fix issue in spec generation `yang#40 <https://github.com/ansible-network/yang/pull/40>`_.

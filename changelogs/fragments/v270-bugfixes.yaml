@@ -1,2 +1,0 @@
-bugfixes:
-- Fix connection type check issue `yang#32 <https://github.com/ansible-network/yang/pull/32>`_.
