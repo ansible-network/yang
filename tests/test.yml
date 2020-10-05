@@ -1,9 +1,0 @@
----
-# main entrypoint
-
-- import_playbook: yang_json2xml/test.yml
-- import_playbook: yang_spec/test.yml
-- import_playbook: yang_fetch/test.yml
-- import_playbook: fetch_and_configure/test.yml
-- import_playbook: fetch_and_generate_spec/test.yml
-- import_playbook: get/test.yml
